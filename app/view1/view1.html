@@ -1,328 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Initalize title and data source variables -->
+  {% if page.url == '/' or page.url == '/data/' %}
+    {% assign page_title = '' %}
+  {% else %}
+    {% capture page_title %} - {{ page.name }}{% endcapture %}
+  {% endif %}
+  {% include head.html %}
+
   <body>
     <header>
         <div class="inner clearfix">
             <h1>
               <a href="/" class="external-link">
-                <strong>water</strong>.lacity.org
+                <strong>webanalytics</strong>.lacity.org
               </a>
             </h1>
             <ul class="links">
               <li><a href="http://analyticsdash-46.s3-website-us-east-1.amazonaws.com/data/">About <span class="sm-hide">this site</span></a></li>
-              <li><a href="http://analyticsdash-46.s3-website-us-east-1.amazonaws.com/data/">Data</a></li>
+              <li><a href="{{ site.url }}{% if page.slug %}/{{ page.slug }}{% endif %}/data/">Data</a></li>
             </ul>
-            
-            
-              
+            {% assign agencies = site.agencies | sort:"name"  %}
+            {% if agencies.size > 0 %}
+              {% unless page.url contains 'data' %}
                 <div class="agency-selector-wrap">
                   <form>
                     <label for="agency-selector">Select an agency</label>
                     <select name="agency-selector" id="agency-selector" title="Agency Selection Dropdown">
-                      <option value="/">All Participating Websites</option>
-                      
-                        <option value="/bpw/">Board of Public Works</option>
-                      
-                        <option value="/bca/">Bureau of Contract Administration</option>
-                      
-                        <option value="/boe/">Bureau of Engineering</option>
-                      
-                        <option value="/sanitation/">Bureau of Sanitation</option>
-                      
-                        <option value="/bsl/">Bureau of Street Lighting</option>
-                      
-                        <option value="/bavn/">Business Assistance Virtual Network</option>
-                      
-                        <option value="/geohub/">DataLA GeoHub</option>
-                      
-                        <option value="/dcp/">Department of City Planning</option>
-                      
-                        <option value="/cultural/">Department of Cultural Affairs</option>
-                      
-                        <option value="/dot/">Department of Transportation</option>
-                      
-                        <option value="/dwp/">Department of Water and Power</option>
-                      
-                        <option value="/disability/">Department on Disability</option>
-                      
-                        <option value="/elpueblo/">El Pueblo De Los Angeles</option>
-                      
-                        <option value="/emergency/">Emergency Management Department</option>
-                      
-                        <option value="/erb/">Employee Relations Board</option>
-                      
-                        <option value="/ethics/">Ethics Commission</option>
-                      
-                        <option value="/hcidla/">Housing and Community Investment Department</option>
-                      
-                        <option value="/ita/">Information Technology Agency</option>
-                      
-                        <option value="/business/">LA Elected Officials</option>
-                      
-                        <option value="/lafpp/">Los Angeles Fire and Police Pensions</option>
-                      
-                        <option value="/lawa/">Los Angeles World Airports</option>
-                      
-                        <option value="/zoo/">Los Angeles Zoo and Botanical Gardens</option>
-                      
-                        <option value="/finance/">Office of Finance</option>
-                      
-                        <option value="/attorney/">Office of the City Attorney</option>
-                      
-                        <option value="/clerk/">Office of the City Clerk</option>
-                      
-                        <option value="/controller/">Office of the City Controller</option>
-                      
-                        <option value="/mayor/">Office of the Mayor</option>
-                      
-                        <option value="/opendata/">Open Data Portal</option>
-                      
-                        <option value="/portofla/">Port of Los Angeles</option>
-                      
-                        <option value="/wages/">Raise the Wage LA</option>
-                      
-                        <option value="/zimas/">Zone Information and Map Access Systems</option>
-                      
+                      <option value="{{site.baseurl}}/">{{site.dropdown_title}}</option>
+                      {% for agency in agencies %}
+                        <option value="{{site.baseurl}}{{agency.url}}">{{agency.name}}</option>
+                      {% endfor %}
                     </select>
                   </form>
                 </div>
-              
-            
+              {% endunless %}
+            {% endif %}
         </div>
     </header>
     <div class="container">
 
-              
-    <!--
-      JavaScript block hooks look for any element with both data-block and
-      data-source attributes:
-      <section data-block="users" data-source="path/to/data.json">
-        The "loading", "loaded", and "error" classes are set on this element
-        the data-source URL is loaded. Then the renderer is called on the first
-        child of the block with the "data" class:
-        <div class="data">
-        </div>
-        Some renderers expect to be called on HTML tables, in which
-        case you would use:
-        <table class="data">
-        </table>
-      </section>
-      -->
-      <div id="main_data" class="width-two-thirds">
-         <!--        <style>
-          .technical-difficulties {
-            color: #981b1e;
-            background: #fff;
-            padding-top: 1.25em;
-          }
-        </style>
-
-        <div class="technical-difficulties">
-          * We are currently experiencing technical difficulties with respect to our real-time traffic data. 
-          Actual real-time visitor counts may be higher than displayed.
-        </div> -->
-
-
-        <section id="realtime"
-          data-block="realtime"
-          data-source="data/realtime.json"
-          data-refresh="15">
-          <h2 id="current_visitors" class="data">...</h2>
-          <div class="chart_subtitle">stormwater gallons captured now</div>
-        </section>
-
-        <section class="section_headline visits_today">
-          <h3>Visits Today</h3>
-          <h4>Eastern Time</h4>
-        </section>
-        <section id="time_series"
-          data-block="today"
-          data-source="data/today.json"
-          data-refresh="15">
-          <svg class="data time-series">
-          </svg>
-        </section>
-
-        <section class="section_headline">
-          <h3>Visits in the Past 90 Days</h3>
-        </section>
-
-        <section class="section_subheadline">
-          There were <span id="total_visitors" class="data">...</span> visits over the past 90 days.
-        </section>
-
-        <section id="devices" class="three_column"
-          data-block="devices"
-          data-source="data/devices.json">
-          <h4>Devices</h4>
-          <figure id="chart_device_types">
-            <div class="data bar-chart">
-            </div>
-          </figure>
-
-          <p>
-            Based on rough network segmentation data, we estimate that <strong>less than 5%</strong> of all traffic across all agencies comes from City of Los Angeles networks.
-          </p>
-
-          <p>
-            Much more detailed data is available in <strong><a href="data/">downloadable CSV and JSON</a></strong>. This includes data on combined browser and OS usage.
-          </p>
-        </section>
-
-        <section id="browsers" class="three_column">
-          <h4>Browsers</h4>
-
-          <figure id="chart_browsers"
-            data-block="browsers"
-            data-source="data/browsers.json">
-            <div class="data bar-chart">
-            </div>
-          </figure>
-
-          <figure id="chart_ie"
-            data-block="ie"
-            data-source="data/ie.json"
-            data-scale-to-parent="true">
-            <h4>Internet Explorer</h4>
-            <div class="data bar-chart">
-            </div>
-          </figure>
-        </section>
-
-        <section id="operating_systems" class="three_column">
-          <h4>Operating Systems</h4>
-
-          <figure id="chart_os"
-            data-block="os"
-            data-source="data/os.json">
-            <div class="data bar-chart">
-            </div>
-          </figure>
-
-          <figure id="chart_windows"
-            data-block="windows"
-            data-source="data/windows.json"
-            data-scale-to-parent="true">
-            <h4>Windows</h4>
-            <div class="data bar-chart">
-            </div>
-          </figure>
-        </section>
-
-        <!-- forces section to wrap, couldn't find a better way -->
-        <div style="clear: both"></div>
-
-        <section class="section_headline">
-          <h3>Visitor Locations Right Now</h3>
-        </section>
-
-        <section id="cities" class="three_column"
-          data-block="cities"
-          data-source="data/top-cities-realtime.json">
-          <h4>Cities</h4>
-          <figure id="chart_top-cities-90-days">
-            <div class="data bar-chart">
-            </div>
-          </figure>
-        </section>
-
-        <section id="countries" class="three_column">
-          <h4>Countries</h4>
-
-          <figure id="chart_us"
-            data-block="countries"
-            data-source="data/top-countries-realtime.json">
-            <div class="data bar-chart">
-            </div>
-          </figure>
-
-          <figure id="chart_countries"
-            data-block="international_visits"
-            data-source="data/top-countries-realtime.json">
-            <h4>International</h4>
-            <div class="data bar-chart">
-            </div>
-          </figure>
-        </section>
-
-      </div>
-
-      <div id="secondary_data" class="width-one-third">
-        <section id="top_100_table">
-
-          <!-- see: http://heydonworks.com/practical_aria_examples/ -->
-          <h3>Top <span id="top_table_type">Pages</span></h3>
-          <ul class="pills" role="tablist">
-            <li><a role="tab" data-type="Pages" aria-selected="true" href="#top-pages-realtime" class="site-nav">Now</a></li>
-            <li><a role="tab" data-type="Domains" href="#top-pages-7-days" class="site-nav">7 Days</a></li>
-            <li><a role="tab" data-type="Domains" href="#top-pages-30-days" class="site-nav">30 Days</a></li>
-          </ul>
-
-          <figure class="top-pages" id="top-pages-realtime" role="tabpanel"
-            data-block="top-pages-realtime"
-            data-source="data/top-pages-realtime.json"
-            data-refresh="15">
-            <h5><em>
-              People on a <strong>single, specific page</strong> now. We only count pages with at least 10 people on the page.
-              <a href="data/all-pages-realtime.csv">Download the full dataset.</a>
-            </em></h5>
-            <div class="data bar-chart">
-            </div>
-          </figure>
-
-          <figure class="top-pages" id="top-pages-7-days" role="tabpanel"
-            data-block="top-pages"
-            data-source="data/top-domains-7-days.json">
-            <h5><em>Visits over the last week to <strong>domains</strong>, including traffic to all pages within that domain.</em></h5>
-            <div class="data bar-chart">
-            </div>
-          </figure>
-
-          <figure class="top-pages" id="top-pages-30-days" role="tabpanel"
-            data-block="top-pages"
-            data-source="data/top-domains-30-days.json">
-            <h5><em>
-              Visits over the last month to <strong>domains</strong>, including traffic to all pages within that domain. We only count pages with at least 1,000 visits in the last month.
-              <a href="data/top-domains-30-days.csv">Download the full dataset.</a>
-            </em></h5>
-            <div class="data bar-chart">
-            </div>
-          </figure>
-
-        </section>
-
-        <section id="top_downloads_table">
-
-          <h3>Top Downloads</h3>
-          <h5><em>Total file downloads yesterday on government domains.</em></h5>
-          <figure id="top-downloads"
-            data-block="top-downloads"
-            data-source="data/top-downloads-yesterday.json">
-            <div class="data bar-chart">
-            </div>
-          </figure>
-
-        </section>
-
-
-
+      {{ content }}
 
     </div>
-        <div class="container">
-      <section id="explanation" class="width-two-thirds">
-
-          <h3>About this Site</h3>
-          <p>
-            This data provides a window into how people are interacting with the government online. The data comes from a unified Google Analytics account for City of Los Angeles webpages created by the Mayor's Data Team</a>. This program helps government agencies understand how people find, access, and use government services online. The program does not track individuals, and anonymizes the IP addresses of visitors.
-          </p>
-
-          <p>
-            We plan to expand the data made available here. If you have any suggestions, or spot any issues or bugs, please contact the <a href="mayor.opendata@lacity.org" class="external-link">Mayor's Data Team</a>.
-          </p>
-      </section>
-      <section class="width-one-third">
-        <h3>Download the data</h3>
-        <p>You can <a href="http://analyticsdash-46.s3-website-us-east-1.amazonaws.com/data/">download the data here.</a> Available in JSON and CSV format.</p>
-      </section>
-</div>
+    {% include footer.html %}
 
   </body>
+
+  {% include footer_scripts.html %}
+
 </html>

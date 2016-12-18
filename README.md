@@ -1,4 +1,6 @@
-# `angular-seed` — the seed for AngularJS apps
+# storm.lacity.org
+
+A project to publish stormwater capture data for the City of Los Angeles.
 
 This project is an application skeleton for a typical [AngularJS][angularjs] web app. You can use it
 to quickly bootstrap your angular webapp projects and dev environment for these projects.
